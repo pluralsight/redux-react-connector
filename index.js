@@ -1,1 +1,1 @@
-module.exports = require('./lib/connect')
+exports.createConnector = require('./lib/create')
