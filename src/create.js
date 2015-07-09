@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function createStore(redux) {
+export default function createConnector(redux) {
   const { subscribe, getState } = redux
 
   return function connectToStore(...storeNames) {

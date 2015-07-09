@@ -1,11 +1,11 @@
 import React from 'react/addons'
 import { createRedux } from 'redux'
 
-import createStores from '../connect'
+import createStores from '../create'
 
 const { TestUtils } = React.addons
 
-describe('connect', () => {
+describe('create', () => {
 
   const initialState = {
     users: {
