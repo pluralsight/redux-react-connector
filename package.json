@@ -1,6 +1,6 @@
 {
   "name": "redux-react-connector",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Higher-order React component for listening to redux stores",
   "main": "index.js",
   "scripts": {
