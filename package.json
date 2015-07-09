@@ -4,7 +4,8 @@
   "description": "Higher-order React component for listening to redux stores",
   "main": "index.js",
   "scripts": {
-    "test": "mocha \"src/**/*.spec.js\""
+    "test": "mocha \"src/**/*.spec.js\"",
+    "test-watch": "mocha \"src/**/*.spec.js\" --watch"
   },
   "keywords": [
     "react",
@@ -21,5 +22,9 @@
     "jsdom": "^3.1.2",
     "mocha": "^2.2.5",
     "should": "^7.0.1"
+  },
+  "dependencies": {
+    "react": "^0.13.3",
+    "redux": "^0.12.0"
   }
 }
