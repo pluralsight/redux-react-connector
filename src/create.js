@@ -1,17 +1,6 @@
 import React from 'react'
 import { Connector, Provider } from 'react-redux'
 
-export function toStores(...storeNames) {
-  return state => {
-    return storeNames.reduce((allStoresState, storeName) => {
-      return {
-        ...allStoresState,
-        [storeName]: state[storeName]
-      }
-    }, {})
-  }
-}
-
 export default function createConnector(store) {
   return function connect(select) {
     return function decorateSource(DecoratedComponent) {

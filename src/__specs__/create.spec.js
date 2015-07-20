@@ -1,7 +1,8 @@
 import React from 'react/addons'
 import { combineReducers, createStore } from 'redux'
 
-import { toStores, default as createConnector } from '../create'
+import createConnector from '../create'
+import toStores from '../to-stores'
 
 const { TestUtils } = React.addons
 
