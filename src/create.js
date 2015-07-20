@@ -1,35 +1,31 @@
 import React from 'react'
+import { Connector, Provider } from 'react-redux'
 
-export default function createConnector(redux) {
-  const { subscribe, getState } = redux
+export function toStores(...storeNames) {
+  return state => {
+    return storeNames.reduce((allStoresState, storeName) => {
+      return {
+        ...allStoresState,
+        [storeName]: state[storeName]
+      }
+    }, {})
+  }
+}
 
-  return function connectToStore(...storeNames) {
+export default function createConnector(store) {
+  return function connect(select) {
     return function decorateSource(DecoratedComponent) {
-      return class ConnectedComponent extends React.Component {
-        constructor(props, context) {
-          super(props, context)
-          this.state = this.reduceStoreState()
-        }
-        componentDidMount() {
-          this.unsubscribe = subscribe(this.onStoreStateChange.bind(this))
-        }
-        componentWillUnmount() {
-          this.unsubscribe()
-        }
-        reduceStoreState() {
-          return storeNames.reduce((allStoresState, storeName) => {
-              const storeState = getState()[storeName]
-              return {
-                ...allStoresState,
-              [storeName]: storeState
-            }
-          }, {})
-        }
-        onStoreStateChange() {
-          this.setState(this.reduceStoreState())
-        }
+      return class ConnectorWrapper extends React.Component {
         render() {
-          return <DecoratedComponent ref="wrapped" {...this.props} {...this.state}/>
+          return (
+            <Provider store={store} ref="3">
+              {() => (
+                <Connector select={select} ref="2">
+                  {(props) => <DecoratedComponent {...props} ref="1" />}
+                </Connector>
+              )}
+            </Provider>
+          )
         }
       }
     }

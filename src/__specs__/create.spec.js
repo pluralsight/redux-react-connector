@@ -1,9 +1,13 @@
 import React from 'react/addons'
-import { createRedux } from 'redux'
+import { combineReducers, createStore } from 'redux'
 
-import createStores from '../create'
+import { toStores, default as createConnector } from '../create'
 
 const { TestUtils } = React.addons
+
+function wrappedComponentProps(comp) {
+  return comp.refs[3].refs[2].refs[1].props // contact!
+}
 
 describe('create', () => {
 
@@ -16,45 +20,44 @@ describe('create', () => {
       plans: [{ id: 'abc123' }]
     }
   }
-  const stores = {
+  const reducers = {
     users: () => initialState.users,
     plans: () => initialState.plans
   }
 
-  const redux = createRedux(stores)
-  const connectToStores = createStores(redux)
+  const store = createStore(combineReducers(reducers))
+  const connect = createConnector(store)
 
   it('adds key for store in props', () => {
-    const storeName = Object.keys(stores)[0]
-    @connectToStores(storeName)
+    const reducerName = Object.keys(reducers)[0]
+    @connect(toStores(reducerName))
     class TestComp extends React.Component {
       render() { return <div>Test Comp</div> }
     }
     const comp = TestUtils.renderIntoDocument(<TestComp />)
-    comp.refs.wrapped.props.should.have.property(storeName)
+    wrappedComponentProps(comp).should.have.property(reducerName)
   })
 
   it('keys per store in props', () => {
-    const storeNames = Object.keys(stores).sort()
-    @connectToStores(...storeNames)
+    const reducerNames = Object.keys(reducers)
+    @connect(toStores(...reducerNames))
     class TestComp extends React.Component {
       render() { return <div>Test Comp</div> }
     }
     const comp = TestUtils.renderIntoDocument(<TestComp />)
-    Object.keys(comp.refs.wrapped.props).sort().should.eql(storeNames)
+    reducerNames.forEach(reducerName => {
+      wrappedComponentProps(comp).should.have.property(reducerName)
+    })
   })
 
   it('transfers all state from the store as props', () => {
-    const storeName = 'plans'
-    @connectToStores(storeName)
+    const reducerName = 'plans'
+    @connect(toStores(reducerName))
     class TestComp extends React.Component {
       render() { return <div>Test Comp</div> }
     }
     const comp = TestUtils.renderIntoDocument(<TestComp />)
-    Object.keys(stores).forEach(storeName => {
-      comp.refs.wrapped.props[storeName]
-    })
-    comp.refs.wrapped.props[storeName].should.eql(initialState[storeName])
+    wrappedComponentProps(comp)[reducerName].should.eql(initialState[reducerName])
   })
 
 })

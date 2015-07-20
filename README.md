@@ -4,17 +4,16 @@ Connector implementation meant for use with the [redux](https://github.com/gaear
 
 ## Why
 
-#### Already provided from `redux/react#Connector`
+#### Already provided from `react-redux#Connector`
 
 - Encapsulates all store listening and state in one higher-order Component
 - Pass all store state as props to your Components
 
 #### `redux-react-connect` additionally provides
 
-- Easy listenin' to multiple stores by name
+- Convenient `toStores` select function for easy listenin' to multiple stores by name
 - Gets all data from specified stores without additional configuration
-- No `Provider` wrapping of app Component required
-- A style that avoids callbacks when connecting your smart components
+- Invisible `Provider` wrapping of Components
 
 ## Install
 
@@ -24,36 +23,36 @@ npm install redux-react-connect --save-dev
 
 ## Usage
 
-As usual, initializing Redux is required.  `./redux.js` might look like this:
+As usual, initializing Redux is required.  Your `./store.js` might look like this:
 
 ```
-import { createRedux } from 'redux'
-import * as stores from './my-stores-index'
+import { createStore, combineReducers } from 'redux'
+import * as reducers from './my-reducer-index'
 
-const redux = createRedux(stores)
-
-export default redux
+export default createStore(combineReducers(reducers))
 ```
 
-Now you need to initialize your connector.  `./connect-to-stores.js` might look like this:
+Now you need to initialize your connector.  Your `./connect.js` might look like this:
 
 ```
-import redux from './redux'
-import { createConnector } from 'redux-react-connector'
+import store from './store'
+import { default as createConnector, toStores } from 'redux-react-connector'
 
-export default createConnector(redux)
+export default createConnector(store)
 ```
 
-Now you're all ready to connect your stores' data to components
+Now you're all ready to connect your stores' data to components:
 
 ```
-import connectToStores from './connect-to-stores'
+import { toStores } from 'redux-react-connector'
+import connectToStores from './connect'
 
-@connectToStores('myStoreName')
+@connect(toStores('myReducer'))
+//or @connect(state => { myReducer: state.myReducer })
 class MyComponent extends React.Component {
   render() {
     return (
-      <div>{this.props.myStoreName.storeProperty}</div>
+      <div>{this.props.myReducer.reducerProperty}</div>
     )
   }
 }
@@ -63,6 +62,23 @@ Using the decorator wraps the Component in a higher-order Component that takes c
 
 (Note that to use decorators, you'll need something like [babel on stage 1](https://babeljs.io/docs/usage/experimental/).
 
-In the example above, `myStoreName` is the name of your store, and on that object all the store's state will be available, as shown with `storeProperty` above.
+In the example above, `myReducer` is the name of your reducer, and on that object all the store's state for that reducer will be available, as shown with `reducerProperty` above.
 
-To listen to multiple stores, pass, for instance, 'myOtherStoreName' to the decorator.  Note that these names match those that you exported in your `./store-index.js` and initialized Redux with.
+To listen to multiple stores, pass, for instance, 'myOtherReducerName' to the decorator.  Note that these names match those that you exported in your `./my-reducer-index.js` file and with which you initialized Redux.
+
+## Custom Selector
+
+If you'd rather creator your own select function instead of using the convenient `toStores` function, that's still possible:
+
+```
+import connectToStores from './connect'
+
+@connect(state => { myReducer: state.myReducer })
+class MyComponent extends React.Component {
+  render() {
+    return (
+      <div>{this.props.myReducer.reducerProperty}</div>
+    )
+  }
+}
+```
