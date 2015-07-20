@@ -36,7 +36,7 @@ Now you need to initialize your connector.  Your `./connect.js` might look like 
 
 ```
 import store from './store'
-import { default as createConnector, toStores } from 'redux-react-connector'
+import { createConnector, toStores } from 'redux-react-connector'
 
 export default createConnector(store)
 ```
@@ -48,7 +48,6 @@ import { toStores } from 'redux-react-connector'
 import connectToStores from './connect'
 
 @connect(toStores('myReducer'))
-//or @connect(state => { myReducer: state.myReducer })
 class MyComponent extends React.Component {
   render() {
     return (

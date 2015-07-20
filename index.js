@@ -1,2 +1,2 @@
 exports.toStores = require('./lib/to-stores')
-module.exports = require('./lib/create')
+exports.createConnector = require('./lib/create')
