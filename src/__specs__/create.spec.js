@@ -29,6 +29,16 @@ describe('create', () => {
   const store = createStore(combineReducers(reducers))
   const connect = createConnector(store)
 
+  it('lets existing props flow through', () => {
+    const reducerName = Object.keys(reducers)[0]
+    @connect(toStores(reducerName))
+    class TestComp extends React.Component {
+      render() { return <div>Test Comp</div> }
+    }
+    const comp = TestUtils.renderIntoDocument(<TestComp existing="thing" />)
+    wrappedComponentProps(comp).should.have.property('existing')
+  })
+
   it('adds key for store in props', () => {
     const reducerName = Object.keys(reducers)[0]
     @connect(toStores(reducerName))

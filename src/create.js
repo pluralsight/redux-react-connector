@@ -10,7 +10,7 @@ export default function createConnector(store) {
             <Provider store={store} ref="3">
               {() => (
                 <Connector select={select} ref="2">
-                  {(props) => <DecoratedComponent {...props} ref="1" />}
+                  {(props) => <DecoratedComponent {...this.props} {...props} ref="1" />}
                 </Connector>
               )}
             </Provider>
