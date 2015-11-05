@@ -1,3 +1,7 @@
+## Deprecated
+
+Use `react-redux#connect` instead.  This repo will be deleted soon.
+
 #redux-react-connector
 
 Connector implementation meant for use with the [redux](https://github.com/gaearon/redux) [flux](https://facebook.github.io/flux/docs/overview.html) implementation.
